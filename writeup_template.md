@@ -71,15 +71,14 @@ As stated above an SVM was not used on final solution. But test was made using H
 
 ### Sliding Window Search
 
-#### 1. Describe how (and identify where in your code) you implemented a sliding window search.  How did you decide what scales to search and how much to overlap windows?
 
 I decided to search window positions at 3 different scales over the image as shown below:
 
-| Windows Size | Y- Axis Search Area | Overlap |
-| ------------ | :-----------------: | ------: |
-| 32 x 32      | (400, 464)          | 75%     |
-| 64 x 64      | (400, 665)          | 50%     |
-| 165 x 165    | (500, 665)          | 50%     |
+| Windows Size | Y- Axis Search Area | Overlap |                                                         |
+| ------------ | :-----------------: | :-----: | ------------------------------------------------------: |
+| 32 x 32      | (400, 464)          | 75%     | <img src='./output_images/windows_32.png' width='128'>  |
+| 64 x 64      | (400, 665)          | 50%     | <img src='./output_images/windows_64.png' width='128'>  |
+| 165 x 165    | (500, 665)          | 50%     | <img src='./output_images/windows_165.png' width='128'> |
 
 ```python
 windows.extend(slide_window(image, x_start_stop=[None, None], y_start_stop=(400, 665), xy_window=(64, 64), xy_overlap=(0.75, 0.75)))
@@ -89,11 +88,24 @@ windows.extend(slide_window(image, x_start_stop=[None, None], y_start_stop=(400,
 windows.extend(slide_window(image, x_start_stop=[None, None], y_start_stop=(500, 665),xy_window=(165, 165), xy_overlap=(0.5, 0)))
 ```
 
-The code was the same as taught in course.
+The code was the same as taught in course. The images below show all the grids without overlaping.
 
-![alt text][image3]
 
-#### 2. Show some examples of test images to demonstrate how your pipeline is working.  What did you do to optimize the performance of your classifier?
+<center>
+<img src='./output_images/windows_all.png' width='512'> 
+</center>
+
+
+#### 2. Samples Images with Sliding Window Search
+
+Below we show two frames processed by the CNN + sliding window.
+
+
+<center>
+<img src='./output_images/boxes_1.png' width='512'> 
+<img src='./output_images/boxes_2.png' width='512'> 
+</center>
+
 
 ---
 ### Convolutional Neural Network
@@ -172,29 +184,44 @@ The model used an adam optimizer with an start learning rate of 1.0e-4, so the l
 Here's a [link to my video result](https://youtu.be/ALX-2v3E4VM)
 
 
-#### 2. Describe how (and identify where in your code) you implemented some kind of filter for false positives and some method for combining overlapping bounding boxes.
+#### 2. HeatMap
 
 I recorded the positions of positive detections in each frame of the video.  From the positive detections I created a heatmap and then thresholded that map to identify vehicle positions.  I then used `scipy.ndimage.measurements.label()` to identify individual blobs in the heatmap.  I then assumed each blob corresponded to a vehicle.  I constructed bounding boxes to cover the area of each blob detected.  
 
 Here's an example result showing the heatmap from a series of frames of video, the result of `scipy.ndimage.measurements.label()` and the bounding boxes then overlaid on the last frame of video:
 
 ### Here are six frames and their corresponding heatmaps:
+<center>
+<p> Frame</p>
+<img src='./output_images/frame_0.png' width='128'> 
+<img src='./output_images/frame_1.png' width='128'>
+<img src='./output_images/frame_2.png' width='128'>
+<img src='./output_images/frame_3.png' width='128'>
+<img src='./output_images/frame_4.png' width='128'>
+<img src='./output_images/frame_5.png' width='128'>
+</center>
+<center>
+<p> HeatMap</p>
+<img src='./output_images/heatmap_0.png' width='128'> 
+<img src='./output_images/heatmap_1.png' width='128'> 
+<img src='./output_images/heatmap_2.png' width='128'> 
+<img src='./output_images/heatmap_3.png' width='128'> 
+<img src='./output_images/heatmap_4.png' width='128'> 
+<img src='./output_images/heatmap_5.png' width='128'> 
+</center>
 
-![alt text][image5]
-
-### Here is the output of `scipy.ndimage.measurements.label()` on the integrated heatmap from all six frames:
-![alt text][image6]
-
-### Here the resulting bounding boxes are drawn onto the last frame in the series:
-![alt text][image7]
-
-
+<center>
+<p> Fianl Images</p>
+<img src='./output_images/final_0.png' width='128'> 
+<img src='./output_images/final_1.png' width='128'> 
+<img src='./output_images/final_2.png' width='128'> 
+<img src='./output_images/final_3.png' width='128'> 
+<img src='./output_images/final_4.png' width='128'> 
+<img src='./output_images/final_5.png' width='128'> 
+</center>
 
 ---
 
 ### Discussion
 
-#### 1. Briefly discuss any problems / issues you faced in your implementation of this project.  Where will your pipeline likely fail?  What could you do to make it more robust?
-
-Here I'll talk about the approach I took, what techniques I used, what worked and why, where the pipeline might fail and how I might improve it if I were going to pursue this project further.  
-
+At the end I used a naive approach of CNN + sliding window. However, There are already DL techniques, such as, YOLO ou Fast RCNN, that output the bounding boxes, and they are much faster than the technique I used. Using such implementations will improve the detction system and the speed of the search.

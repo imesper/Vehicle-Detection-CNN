@@ -49,10 +49,10 @@ cap = cv2.VideoCapture('./project_video.mp4')
 detection = LaneDetection(nwindows=20)
 
 fourcc = cv2.VideoWriter_fourcc('X', '2', '6', '4')
-out = cv2.VideoWriter('output_video.mp4', fourcc,
+out = cv2.VideoWriter('output_videos/output_video.mp4', fourcc,
                       cap.get(cv2.CAP_PROP_FPS), (1280, 720))
 
-model = load_model('./model-008.h5')
+model = load_model('./models/model-008.h5')
 
 previous_windows = None
 
@@ -120,6 +120,7 @@ while(True):
         windows.extend(slide_window(image, x_start_stop=[None, None], y_start_stop=(500, 665),
                                     xy_window=(165, 165), xy_overlap=(0.5, 0)))
         on_windows = []
+
         for window in windows:
 
             # 3) Extract the test window from original image
@@ -137,11 +138,6 @@ while(True):
             on_windows.extend(previous_windows)
         previous_windows = tmp
 
-        # print(len(on_windows), len(previous_windows))
-
-        window_img = draw_boxes(image, on_windows,
-                                color=(0, 0, 255), thick=6)
-        cv2.imshow('Windows', window_img)
         heat = np.zeros_like(image[:, :, 0]).astype(np.float)
         # np.set_printoptions(threshold=np.nan)
         # print(box_windows)
@@ -161,8 +157,8 @@ while(True):
         final_image = cv2.cvtColor(box_img, cv2.COLOR_RGB2BGR)
 
         # final_image = final_image.astype(np.float32)*255
+        name_frame = 'final_'+str(count) + '.png'
 
-        cv2.imshow("Final", final_image)
         out.write(final_image)
 
         if cv2.waitKey(1) & 0xFF == ord('q'):
